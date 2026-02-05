@@ -109,7 +109,6 @@
 
                         <div class="flex-grow-1 d-flex align-items-center justify-content-center
                    border rounded bg-light position-relative">
-                            <!-- プレースホルダー -->
                             <div id="previewPlaceholder" class="text-muted text-center">
                                 <div class="fs-5">📷 画像を選択してください</div>
                                 <div class="small">
@@ -117,7 +116,6 @@
                                 </div>
                             </div>
 
-                            <!-- 画像プレビュー -->
                             <img id="preview" class="preview-image img-fluid d-none" alt="preview">
                         </div>
 
@@ -128,12 +126,9 @@
         </div>
     </div>
 
-    <!-- 実データ用 canvas -->
     <canvas id="canvas" style="display:none;"></canvas>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         const STORAGE_KEY = "watermarkSettings";
@@ -152,8 +147,8 @@
         const previewPlaceholder = document.getElementById("previewPlaceholder");
 
         let originalImage = new Image();
+        let originalFileBaseName = ""; // ★ 追加
 
-        /* --- LocalStorage 初期値 --- */
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
             try {
@@ -175,10 +170,11 @@
             opacityValue.textContent = opacityInput.value;
         });
 
-        /* --- 画像選択 --- */
         imageInput.addEventListener("change", (e) => {
             const file = e.target.files[0];
             if (!file) return;
+
+            originalFileBaseName = file.name.replace(/\.[^/.]+$/, "");
 
             const reader = new FileReader();
             reader.onload = () => {
@@ -197,7 +193,6 @@
             previewPlaceholder.classList.add("d-none");
         };
 
-        /* --- 透かし適用 --- */
         applyBtn.addEventListener("click", () => {
             if (!originalImage.src) return;
 
@@ -237,11 +232,15 @@
             previewPlaceholder.classList.add("d-none");
         });
 
-        /* --- ダウンロード --- */
         downloadBtn.addEventListener("click", () => {
             const a = document.createElement("a");
             a.href = canvas.toDataURL("image/png");
-            a.download = "watermarked.png";
+
+            const filename = originalFileBaseName
+                ? `${originalFileBaseName}_watermarked.png`
+                : "watermarked.png";
+
+            a.download = filename;
             a.click();
         });
     </script>
