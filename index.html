@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <title>画像透かしツール</title>
 
-    <!-- Bootstrap 5.3.8（integrityなし） -->
+    <!-- Bootstrap 5.3.8 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -36,11 +36,26 @@
 <body>
 
     <!-- ===== Header ===== -->
-    <nav class="navbar navbar-expand-lg bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <span class="navbar-brand text-white fw-semibold">
+            <span class="navbar-brand fw-semibold">
                 画像透かしツール
             </span>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+                aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#aboutModal">
+                            このアプリについて
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
@@ -108,7 +123,7 @@
                         <div class="section-title mb-3">Preview</div>
 
                         <div class="flex-grow-1 d-flex align-items-center justify-content-center
-                   border rounded bg-light position-relative">
+                            border rounded bg-light position-relative">
                             <div id="previewPlaceholder" class="text-muted text-center">
                                 <div class="fs-5">📷 画像を選択してください</div>
                                 <div class="small">
@@ -127,6 +142,51 @@
     </div>
 
     <canvas id="canvas" style="display:none;"></canvas>
+
+    <!-- ===== About Modal ===== -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">このアプリについて</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="mb-2">© 2026 @pokiiio</p>
+
+                    <p>
+                        本ツールは、個人利用・商用利用を問わずご利用いただけます。<br>
+                        画像処理はすべてブラウザ内で行われ、画像データは外部に送信されません。
+                    </p>
+
+
+                    <p class="small text-muted mb-0">
+                        本ツールの利用によって生じた損害について、作者は責任を負いません。
+                    </p>
+
+                    <p class="small text-muted mb-0">
+                        感謝の気持ちは下記のAmazonほしい物リストから。
+                    </p>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
+                        onclick="window.open('https://www.amazon.co.jp/hz/wishlist/ls/20NJEJO5C089Q?ref_=list_d_wl_lfu_nav_3', '_blank')">
+                        Amazonほしい物リストを見る
+                    </button>
+
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">
+                        閉じる
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -147,7 +207,7 @@
         const previewPlaceholder = document.getElementById("previewPlaceholder");
 
         let originalImage = new Image();
-        let originalFileBaseName = ""; // ★ 追加
+        let originalFileBaseName = "";
 
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
@@ -228,8 +288,6 @@
             ctx.rotate(30 * Math.PI / 180);
 
             preview.src = canvas.toDataURL();
-            preview.classList.remove("d-none");
-            previewPlaceholder.classList.add("d-none");
         });
 
         downloadBtn.addEventListener("click", () => {
